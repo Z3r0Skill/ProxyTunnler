@@ -18,6 +18,9 @@ class Debugger:
         elif type == "warning" and self._active:
             print('\033[0;33;m %s \033[0;m' % msg)
 
+        elif type =="important" and self_active:
+            print('\033[0;33;m %s \033[0;m' % msg)
+
         elif type==None:
             print msg
 
