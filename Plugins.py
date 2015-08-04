@@ -191,7 +191,7 @@ class Functions:
 
 
 
-        if "GET " in request:
+        if "GET " in request[:4]:
             firstline = self.getFirstLine(request)
             if "favicon.ico" in firstline:
                 start = firstline.index("GET ") + len("GET ")

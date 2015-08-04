@@ -61,6 +61,8 @@ class ProxyWorker(Thread):
         self._server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._server_sock.connect((self._hostname, 443))
 
+        request = self._functions.changeConnectionType(request)
+
         sslProxy = ProxyWorkerServerSSL(self._server_sock, self._client_sock, self._debugger)
 
         sslProxy.start()
@@ -167,7 +169,7 @@ class ProxyWorker(Thread):
         self._server_sock.settimeout(10)
 
         if not oldreq == request:
-            self._debugger.printMessage("[+] Modified request", None)
+            self._debugger.printMessage("[+] SSLStrip successfull", None)
             self._debugger.log(request)
             host = self._functions.getHostname(request)
             port = 443
