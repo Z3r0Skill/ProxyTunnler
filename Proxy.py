@@ -61,8 +61,6 @@ class ProxyWorker(Thread):
         self._server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._server_sock.connect((self._hostname, 443))
 
-        request = self._functions.changeConnectionType(request)
-
         sslProxy = ProxyWorkerServerSSL(self._server_sock, self._client_sock, self._debugger)
 
         sslProxy.start()
