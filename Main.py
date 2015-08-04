@@ -13,20 +13,18 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Proxy Tunnler")
     parser.add_argument('-i', '--ip', default='', action='store', dest="ip", help="IP to listen")
     parser.add_argument('-p', '--port', type=int, action='store', dest="port", default=8080, help="Port for listening")
-    parser.add_argument('-d', '--debug', action='store', dest="debug", default=0, type=int, help='Activate debug messages (0/1)')
-
+    parser.add_argument('-sslstrip', '--sslstrip', type=bool, action='store', dest='sslstrip', default=False, help="Activate sslstrip")
+    parser.add_argument('-d', '-debug', type=bool, action='store', dest="debug", default=False, help="Activate debug information")
+    
     #TO-DO PARSER FOR PLUGIN FEATURES!
 
     args = parser.parse_args()
 
-    ''' Plugin option activation. [SSLStrip, ChangetoHttp , NoCookies , Redirect] '''
-    plugins = [True, False, False, False]
-
     print("Welcome to the ProxyTunnler")
-    print("Options set: " + str(plugins))
     ip = args.ip
     port = args.port
     debug = args.debug
+    plugins = args.sslstrip
 
     if not ip:
         print("Listening to: localhost" + ":" + str(port))
@@ -41,7 +39,7 @@ if __name__ == "__main__":
     try:
         s.bind(address)
     except socket.error as msg:
-        print msg
+        print(msg)
         sys.exit()
 
     s.listen(5)
@@ -68,7 +66,7 @@ if __name__ == "__main__":
             t.start()
             threads.append(t)
         except socket.error as msg:
-            print msg
+            print(msg)
             continue
         except KeyboardInterrupt:
             print("\nShutting down proxy")

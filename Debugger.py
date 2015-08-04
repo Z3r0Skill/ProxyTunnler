@@ -24,6 +24,9 @@ class Debugger:
         elif type =="hint" and self_active:
             print('\033[0;33;m %s \033[0;m' % msg)
 
+        elif type == "test" and self_active:
+            print('\033[0;33;m %s \033[0;m' % msg)
+
         elif type==None:
             print msg
 

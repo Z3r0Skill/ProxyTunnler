@@ -22,12 +22,12 @@ class ProxyWorker(Thread):
         self._port = port
         self._functions = functions
         self._hostname = ""
-        self._changeToHttp = plugins[1]
-        self._noCookies = plugins[2]
-        self._redirect = plugins[3]
+        #self._changeToHttp = plugins[1]
+        #self._noCookies = plugins[2]
+        #self._redirect = plugins[3]
         self._id = self.ident
         self._debugger = debugger
-        self._sslstrip = plugins[0]
+        self._sslstrip = plugins
 
     def run(self):
         request = self.getRequest()
@@ -167,7 +167,7 @@ class ProxyWorker(Thread):
         self._server_sock.settimeout(10)
 
         if not oldreq == request:
-            self._debugger.printMessage("Modified request", None)
+            self._debugger.printMessage("[+] Modified request", None)
             self._debugger.log(request)
             host = self._functions.getHostname(request)
             port = 443
