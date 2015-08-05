@@ -2,7 +2,7 @@ from threading import Thread
 import socket
 import errno
 
-DATASIZE = 4096
+DATASIZE = 8192
 
 class ProxyWorkerServerSSL(Thread):
     def __init__(self, server_sock, client_sock, debugger):

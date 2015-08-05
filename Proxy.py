@@ -11,23 +11,20 @@ import ssl
 #Ignore SIG_PIPE and don't throw exceptions on it... (http://docs.python.org/library/signal.html)
 signal(SIGPIPE,SIG_DFL)'''
 
-DATASIZE = 4096
+DATASIZE = 8192
 
 
 class ProxyWorker(Thread):
-    def __init__(self, client_sock, port, debugger, functions, plugins):
+    def __init__(self, client_sock, port, debugger, functions, sslstrip):
         Thread.__init__(self)
         self._client_sock = client_sock
         self._server_sock = None
         self._port = port
         self._functions = functions
         self._hostname = ""
-        #self._changeToHttp = plugins[1]
-        #self._noCookies = plugins[2]
-        #self._redirect = plugins[3]
         self._id = self.ident
         self._debugger = debugger
-        self._sslstrip = plugins
+        self._sslstrip = sslstrip
 
     def run(self):
         request = self.getRequest()
@@ -145,6 +142,8 @@ class ProxyWorker(Thread):
             self.tlsProxy(request)
             return
 
+        isSSL = False
+
         self._debugger.printMessage("[+] SSL Strip mode!", "warning")
         request = self._functions.changeHTTP11to10(request)
         request = self._functions.changeEncoding(request)
@@ -158,6 +157,11 @@ class ProxyWorker(Thread):
         oldreq = request
         request = self._functions.checkLinks(request)
 
+
+        ##########
+        if "Proxy-Connection: Keep-Alive" in request:
+            request = request.replace("Proxy-Connection: Keep-Alive", "Proxy-Connection: Close")
+
         self._server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._server_sock.settimeout(10)
 
@@ -169,6 +173,7 @@ class ProxyWorker(Thread):
             self._server_sock = ssl.wrap_socket(self._server_sock, ssl_version=ssl.PROTOCOL_TLSv1)
             self._server_sock.connect((host, port))
             self._server_sock.send(request)
+            isSSL = True
         else:
             self._server_sock.connect((self._hostname, 80))
             self._server_sock.sendall(request)
@@ -177,7 +182,10 @@ class ProxyWorker(Thread):
 
         req = ""
         while True:
-            response = self._server_sock.recv(DATASIZE)
+            if isSSL:
+              response = self._server_sock.read()
+            else:
+              response = self._server_sock.recv(DATASIZE)
 
             if not response or response == "stop":
                 break
@@ -185,6 +193,9 @@ class ProxyWorker(Thread):
             #Changing links from response to https
             response = self._functions.changeResponseLinks(response)
 
+            #Response manipulation for testing
+
+            ##################################
 
             try:
                 self._client_sock.sendall(bytes(response))
@@ -195,7 +206,7 @@ class ProxyWorker(Thread):
 
             req += response
 
-        self._debugger.log(req)
+        #self._debugger.log(req)
         #print("Server response with Stripped https links")
         #print(str(req))
         #self._debugger.log(self._functions.getHeader(req))
