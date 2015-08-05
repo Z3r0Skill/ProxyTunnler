@@ -113,11 +113,6 @@ class ProxyWorker(Thread):
             if not response or response == "stop":
                 break
 
-            if self._changeToHttp == True:
-                response = self._functions.changeHTTPtoHTTPS(response)
-
-            if self._noCookies == True:
-                response = self._functions.noCookies(response)
 
             try:
                 self._client_sock.sendall(bytes(response))
