@@ -46,6 +46,7 @@ if __name__ == "__main__":
     threads = []
 
     #queue = Queue(maxsize=0)
+    
 
     logFile = open("LogfileProxy.txt", "w")
     log = LoggerClass(logFile)

@@ -194,7 +194,7 @@ class ProxyWorker(Thread):
             response = self._functions.changeResponseLinks(response)
 
             #Response manipulation for testing
-
+            
             ##################################
 
             try:
@@ -206,7 +206,7 @@ class ProxyWorker(Thread):
 
             req += response
 
-        #self._debugger.log(req)
+        self._debugger.log(req)
         #print("Server response with Stripped https links")
         #print(str(req))
         #self._debugger.log(self._functions.getHeader(req))
