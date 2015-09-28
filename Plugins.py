@@ -108,11 +108,10 @@ class Functions:
 
         if "GET " in self.getFirstLine(request):
             getpost = "GET "
-        elif "POST " in request:
+        elif "POST " in self.getFirstLine(request):
             getpost = "POST "
         else:
             return request
-
 
         #self._debugger.printMessage(str(getpost) + "FOUND", "warning")
         start = request.index(getpost) + len(getpost)

@@ -6,7 +6,7 @@ from Plugins import Functions
 from Debugger import Debugger
 import argparse
 
-DATASIZE = 4096
+DATASIZE = 8192
 
 if __name__ == "__main__":
 
@@ -15,8 +15,7 @@ if __name__ == "__main__":
     parser.add_argument('-p', '--port', type=int, action='store', dest="port", default=8080, help="Port for listening")
     parser.add_argument('-sslstrip', '--sslstrip', type=bool, action='store', dest='sslstrip', default=False, help="Activate sslstrip")
     parser.add_argument('-d', '-debug', type=bool, action='store', dest="debug", default=False, help="Activate debug information")
-    
-    #TO-DO PARSER FOR PLUGIN FEATURES!
+
 
     args = parser.parse_args()
 
@@ -47,6 +46,7 @@ if __name__ == "__main__":
     threads = []
 
     #queue = Queue(maxsize=0)
+    
 
     logFile = open("LogfileProxy.txt", "w")
     log = LoggerClass(logFile)
